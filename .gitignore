@@ -1,0 +1,23 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Generated datasets
+data/raw/*
+data/processed/*
+data/index/*
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/index/.gitkeep
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

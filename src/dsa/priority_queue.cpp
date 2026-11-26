@@ -1,6 +1,7 @@
 
 #include "priority_queue.h"
 #include <stdexcept>
+#include <utility>
 
 MinHeap::MinHeap(int k)
 {
@@ -122,17 +123,17 @@ void MinHeap::offer(const HeapNode &node)
     }
 }
 
-int MinHeap::size()
+int MinHeap::size() const
 {
-    return heap.size();
+    return static_cast<int>(heap.size());
 }
 
-bool MinHeap::empty()
+bool MinHeap::empty() const
 {
     return heap.empty();
 }
 
-bool MinHeap::isFull()
+bool MinHeap::isFull() const
 {
-    return heap.size() == capacity;
+    return heap.size() >= capacity;
 }

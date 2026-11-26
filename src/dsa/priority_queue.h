@@ -36,9 +36,9 @@ public:
 
     void offer(const HeapNode &node);
 
-    int size();
-    bool empty();
-    bool isFull();
+    int size() const;
+    bool empty() const;
+    bool isFull() const;
 };
 
 #endif

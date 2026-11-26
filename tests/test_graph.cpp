@@ -1,5 +1,8 @@
+
 #include <iostream>
 #include "../src/dsa/graph.h"
+#include "../src/graph/bfs.h"
+#include "../src/graph/dfs.h"
 
 using namespace std;
 
@@ -7,27 +10,32 @@ int main()
 {
     Graph graph;
 
-    string A = "Paper_A";
-    string B = "Paper_B";
-    string C = "Paper_C";
+    graph.addVertex("A");
+    graph.addVertex("B");
+    graph.addVertex("C");
+    graph.addVertex("D");
+    graph.addVertex("E");
 
-    graph.addVertex(A);
-    graph.addVertex(B);
-    graph.addVertex(C);
+    graph.addEdge("A", "B");
+    graph.addEdge("A", "C");
+    graph.addEdge("B", "D");
+    graph.addEdge("C", "E");
 
-    graph.addEdge(A, B);
-    graph.addEdge(A, C);
-    graph.addEdge(B, C);
+    cout << "BFS Traversal: ";
 
-    cout << "Vertices: " << graph.getVertexCount() << endl;
-    cout << "Edges: " << graph.getEdgeCount() << endl;
+    vector<string> bfsResult = BFS(graph, "A");
 
-    cout << "\nPapers referenced by A:\n";
+    for (const string &paper : bfsResult)
+        cout << paper << " ";
 
-    for (const string &paper : graph.getNeighbors(A))
-    {
-        cout << paper << endl;
-    }
+    cout << "\nDFS Traversal: ";
+
+    vector<string> dfsResult = DFS(graph, "A");
+
+    for (const string &paper : dfsResult)
+        cout << paper << " ";
+
+    cout << endl;
 
     return 0;
 }

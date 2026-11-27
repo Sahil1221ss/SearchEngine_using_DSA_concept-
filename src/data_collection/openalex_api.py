@@ -17,7 +17,7 @@ topics = [
     "generative artificial intelligence"
 ]
 
-TARGET_PAPERS = 5000
+TARGET_PAPERS = 10000
 PAPERS_PER_REQUEST = 100
 
 papers = {}
@@ -32,13 +32,13 @@ for topic in topics:
     while len(papers) < TARGET_PAPERS:
 
         params = {
-            "search": topic,
-            "per-page": PAPERS_PER_REQUEST,
-            "cursor": cursor
-        }
+    "search": topic,
+    "per-page": PAPERS_PER_REQUEST,
+    "cursor": cursor,
+    "api_key": os.getenv("OPENALEX_API_KEY")
+}
 
-        response = requests.get(URL, params=params)
-
+        response = requests.get(URL, params=params, timeout=30)
         if response.status_code != 200:
             print("Error:", response.status_code)
             break

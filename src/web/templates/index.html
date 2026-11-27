@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Search Engine</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>Academic Search Engine</h1>
+            <p>Discover research papers from 10,000 academic publications.</p>
+        </header>
+
+        <form method="POST" action="/" class="search-box">
+            <input
+                type="text"
+                name="query"
+                placeholder="Search research topics..."
+                value="{{ query }}"
+                required
+            >
+
+            <button type="submit">Search</button>
+        </form>
+
+        {% if query %}
+            {% if error %}
+    <div class="no-results">
+        {{ error }}
+    </div>
+{% endif %}
+
+            <h2 class="results-heading">
+                Search Results for: {{ query }}
+            </h2>
+
+            <p>{{ results|length }} papers displayed</p>
+
+            {% if results %}
+
+                {% for paper in results %}
+
+                    <div class="result-card">
+
+                        <h3>{{ paper.rank }}. {{ paper.title }}</h3>
+
+                        <p><strong>Authors:</strong> {{ paper.authors }}</p>
+
+                        <p><strong>Year:</strong> {{ paper.year }}</p>
+
+                        <p><strong>Citations:</strong> {{ paper.citations }}</p>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="no-results">
+                    No research papers found. Try another keyword.
+                </div>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

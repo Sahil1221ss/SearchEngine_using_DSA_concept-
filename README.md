@@ -34,17 +34,17 @@ The main objective is to build an academic search engine that demonstrates how d
 
 The project will eventually include concepts such as:
 
-* Inverted Index
-* Hash Table
-* Trie
-* Searching
-* Sorting
-* Priority Queue
-* Linked List
-* Graph
-* BFS
-* DFS
-* Ranking
+- Inverted Index
+- Hash Table
+- Trie
+- Searching
+- Sorting
+- Priority Queue
+- Linked List
+- Graph
+- BFS
+- DFS
+- Ranking
 
 ---
 
@@ -54,12 +54,12 @@ The project uses **OpenAlex** as the source of academic research-paper metadata.
 
 The project collects information such as:
 
-* Paper title
-* Authors
-* Publication year
-* Abstract
-* Paper ID
-* Other available academic metadata
+- Paper title
+- Authors
+- Publication year
+- Abstract
+- Paper ID
+- Other available academic metadata
 
 The dataset is generated locally using the data-collection scripts.
 
@@ -167,14 +167,14 @@ python src\preprocessing\data_quality.py
 
 This checks information such as:
 
-* Total number of papers
-* Missing titles
-* Missing abstracts
-* Missing authors
-* Missing publication years
-* Duplicate titles
-* Publication-year range
-* Abstract availability
+- Total number of papers
+- Missing titles
+- Missing abstracts
+- Missing authors
+- Missing publication years
+- Duplicate titles
+- Publication-year range
+- Abstract availability
 
 ---
 
@@ -218,6 +218,12 @@ The generated index is stored locally in:
 
 ```text
 data/index/inverted_index.json
+```
+
+To run app :
+
+```Terminal
+python -m src.web.app
 ```
 
 ---

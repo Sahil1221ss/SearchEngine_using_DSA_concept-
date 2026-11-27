@@ -1,6 +1,6 @@
 
 #include "citation_graph.h"
-
+#include <cmath>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -163,43 +163,55 @@ CitationGraphStats loadCitationGraph(
         papers.push_back({paperID, references});
     }
 
-    // Second pass: create citation edges
-    for (const auto &paper : papers)
-    {
-        std::vector<std::string> references =
-            splitReferences(paper.second);
-
-        if (references.empty())
-            stats.papersWithNoReferences++;
-
-        for (const std::string &reference : references)
-        {
-            stats.totalReferenceLinks++;
-
-            if (graph.hasVertex(reference))
-            {
-                graph.addEdge(paper.first, reference);
-            }
-        }
-    }
-
-    stats.internalReferenceLinks = graph.getEdgeCount();
-
-    // Calculate incoming citation counts
-    std::unordered_map<std::string, size_t> incoming;
+    // Second pass: calculate incoming citation counts
+    unordered_map<string, size_t> incoming;
 
     for (const auto &paper : papers)
         incoming[paper.first] = 0;
 
     for (const auto &paper : papers)
     {
-        for (const std::string &neighbor :
-             graph.getNeighbors(paper.first))
+        vector<string> references = splitReferences(paper.second);
+
+        if (references.empty())
+            stats.papersWithNoReferences++;
+
+        for (const string &reference : references)
         {
-            incoming[neighbor]++;
+            stats.totalReferenceLinks++;
+
+            if (graph.hasVertex(reference))
+            {
+                incoming[reference]++;
+                stats.internalReferenceLinks++;
+            }
         }
     }
 
+    // Third pass: create weighted citation edges
+    for (const auto &paper : papers)
+    {
+        vector<string> references = splitReferences(paper.second);
+
+        for (const string &reference : references)
+        {
+            if (graph.hasVertex(reference))
+            {
+                double citationCount =
+                    static_cast<double>(incoming[reference]);
+
+                double weight =
+                    1.0 / (1.0 + log1p(citationCount));
+
+                graph.addWeightedEdge(
+                    paper.first,
+                    reference,
+                    weight);
+            }
+        }
+    }
+
+    // Calculate citation statistics
     for (const auto &entry : incoming)
     {
         if (entry.second > 0)

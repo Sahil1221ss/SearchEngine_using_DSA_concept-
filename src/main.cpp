@@ -21,6 +21,7 @@
 #include "hybrid_ranker.h"
 #include "citation_graph.h"
 #include "result_ranker.h"
+#include "dijkstra.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -209,5 +210,29 @@ int main(int argc, char **argv)
                     doc.title.c_str());
     }
 
+    // Test 2: Unreachable destination
+
+    PathResult unreachable = dijkstra(graph, "D", "A");
+
+    if (unreachable.found)
+    {
+        cout << "Unreachable test failed\n";
+        return 1;
+    }
+
+    // Test 3: Source and destination are the same
+
+    PathResult same = dijkstra(graph, "A", "A");
+
+    if (!same.found ||
+        same.path.size() != 1 ||
+        same.path[0] != "A" ||
+        same.totalCost != 0.0)
+    {
+        cout << "Same vertex test failed\n";
+        return 1;
+    }
+
+    cout << "ALL DIJKSTRA TESTS PASSED\n";
     return 0;
 }

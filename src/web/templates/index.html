@@ -32,6 +32,11 @@
         </form>
 
         {% if query %}
+            {% if error %}
+    <div class="no-results">
+        {{ error }}
+    </div>
+{% endif %}
 
             <h2 class="results-heading">
                 Search Results for: {{ query }}
@@ -45,7 +50,7 @@
 
                     <div class="result-card">
 
-                        <h3>{{ loop.index }}. {{ paper.title }}</h3>
+                        <h3>{{ paper.rank }}. {{ paper.title }}</h3>
 
                         <p><strong>Authors:</strong> {{ paper.authors }}</p>
 

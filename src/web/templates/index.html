@@ -47,7 +47,15 @@
 
         <p><strong>Year:</strong> {{ paper.year }}</p>
 
-        <p><strong>Citations:</strong> {{ paper.citations }}</p>
+                <p><strong>Citations:</strong> {{ paper.citations }}</p>
+
+        <a
+          class="view-paper"
+          href="{{ paper.doi if paper.doi and paper.doi.startswith('http') else paper.paper_id }}"
+          target="_blank"
+          rel="noopener"
+          >View paper &rarr;</a
+        >
       </div>
 
       {% endfor %} {% else %}
@@ -57,119 +65,176 @@
       </div>
 
       {% endif %} {% endif %}
-    </div>
-
             <!-- Citation Path Finder -->
+        <section class="cp-section" id="citation-finder">
 
-        <section class="citation-section">
+            <div class="cp-header">
+                <h2>Citation Path Finder</h2>
+                <p>
+                    Pick two papers and see how the first one leads to the second
+                    through citations: it cites a paper, which cites another paper,
+                    and so on.
+                </p>
+            </div>
 
-            <h2>Citation Path Finder</h2>
+            <form method="POST" action="/citation-path#citation-finder" class="cp-form">
 
-            <p>
-                Find the lowest-cost citation path between two research papers.
-            </p>
+                <div class="cp-fields">
 
-            <form method="POST" action="/citation-path">
+                    <div class="cp-field">
+                        <label for="source">From (source paper)</label>
+                        <input
+                            type="text"
+                            id="source"
+                            name="source"
+                            list="paper-list"
+                            value="{{ selected_source }}"
+                            placeholder="Type a few words of the title..."
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
 
-                <div class="citation-input">
+                    <button type="button" class="cp-swap" onclick="swapPapers()"
+                            title="Swap source and destination">Swap</button>
 
-                    <label for="source">Source Paper</label>
-
-                    <input
-                        type="text"
-                        id="source"
-                        name="source"
-                        list="paper-list"
-                        placeholder="Search for source paper..."
-                        required
-                    >
-
-                </div>
-
-                <div class="citation-input">
-
-                    <label for="destination">Destination Paper</label>
-
-                    <input
-                        type="text"
-                        id="destination"
-                        name="destination"
-                        list="paper-list"
-                        placeholder="Search for destination paper..."
-                        required
-                    >
+                    <div class="cp-field">
+                        <label for="destination">To (destination paper)</label>
+                        <input
+                            type="text"
+                            id="destination"
+                            name="destination"
+                            list="paper-list"
+                            value="{{ selected_destination }}"
+                            placeholder="Type a few words of the title..."
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
 
                 </div>
 
                 <datalist id="paper-list">
-
                     {% for paper in paper_options %}
-
                         <option value="{{ paper.label }}"></option>
-
                     {% endfor %}
-
                 </datalist>
 
-                <button type="submit">
-                    Find Citation Path
-                </button>
+                <p class="cp-hint">
+                    Type a few words, then click a paper in the suggestion list
+                    (each suggestion ends with its paper ID).
+                </p>
+
+                <button type="submit" class="cp-submit">Find citation path</button>
 
             </form>
 
+            <script>
+                function swapPapers() {
+                    var source = document.getElementById("source");
+                    var destination = document.getElementById("destination");
+                    var saved = source.value;
+                    source.value = destination.value;
+                    destination.value = saved;
+                }
+            </script>
+
             {% if citation_error %}
-
-                <div class="no-results">
-                    {{ citation_error }}
-                </div>
-
+                <div class="cp-alert">{{ citation_error }}</div>
             {% endif %}
 
             {% if citation_path %}
+                {% set steps = citation_path.papers %}
 
-                <div class="citation-result">
+                <div class="cp-result">
 
-                    <h3>Shortest Citation Path</h3>
-
-                    <p>
-                        <strong>Total Cost:</strong>
-                        {{ "%.6f"|format(citation_path.total_cost) }}
-                    </p>
-
-                    <p>
-                        <strong>Number of Papers:</strong>
-                        {{ citation_path.papers|length }}
-                    </p>
-
-                    {% for paper in citation_path.papers %}
-
-                        <div class="result-card">
-
-                            <h3>{{ loop.index }}. {{ paper.title }}</h3>
-
-                            <p>
-                                <strong>Authors:</strong>
-                                {{ paper.authors }}
-                            </p>
-
-                            <p>
-                                <strong>Year:</strong>
-                                {{ paper.year }}
-                            </p>
-
-                            <p>
-                                <strong>Paper ID:</strong>
-                                {{ paper.paper_id }}
-                            </p>
-
+                    <div class="cp-summary">
+                        <div class="cp-stat">
+                            <strong>{{ steps|length - 1 }}</strong>
+                            <span>Citation hops</span>
                         </div>
+                        <div class="cp-stat">
+                            <strong>{{ steps|length }}</strong>
+                            <span>Papers on the path</span>
+                        </div>
+                        <div class="cp-stat">
+                            <strong>{{ "%.3f"|format(citation_path.total_cost) }}</strong>
+                            <span>Total cost</span>
+                        </div>
+                    </div>
 
-                    {% endfor %}
+                    <div class="cp-explain">
+                        <strong>How to read this.</strong>
+                        Each arrow means "cites": the paper above cites the paper below it.
+                        Every hop costs 1 / (1 + ln(1 + c)), where c is the number of papers
+                        in this collection that cite the paper being reached. Well-cited papers
+                        are cheap stepping stones, so the cheapest path is not always the
+                        shortest one.
+                    </div>
+
+                    {% if steps|length == 1 %}
+                        <div class="cp-alert cp-info">
+                            The source and the destination are the same paper, so no hops are needed.
+                        </div>
+                    {% endif %}
+
+                    <div class="cp-chain">
+
+                        {% for paper in steps %}
+
+                            <div class="cp-step">
+
+                                <div class="cp-marker">
+                                    <div class="cp-dot">{{ loop.index }}</div>
+                                </div>
+
+                                <div class="cp-card {% if loop.first %}is-source{% elif loop.last %}is-destination{% endif %}">
+
+                                    {% if loop.first %}<span class="cp-tag cp-tag-source">Source</span>{% endif %}
+                                    {% if loop.last %}<span class="cp-tag cp-tag-destination">Destination</span>{% endif %}
+
+                                    <h3>{{ paper.title }}</h3>
+
+                                    {% set names = (paper.authors or '').split('; ') | select | list %}
+
+                                    <p class="cp-meta">
+                                        {% if names %}
+                                            {{ names[:3] | join(', ') }}{% if names|length > 3 %} et al.{% endif %}
+                                        {% else %}
+                                            Unknown authors
+                                        {% endif %}
+                                    </p>
+
+                                    <p class="cp-meta">
+                                        {{ paper.year }}
+                                        &middot; {{ "{:,}".format(paper.citations | int) }} citations
+                                        &middot; ID {{ paper.paper_id.split('/')[-1] }}
+                                        {% if paper.doi and paper.doi.startswith('http') %}
+                                            &middot; <a class="cp-doi" href="{{ paper.doi }}"
+                                                        target="_blank" rel="noopener">View paper</a>
+                                        {% endif %}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            {% if not loop.last %}
+                                <div class="cp-link">
+                                    <div class="cp-marker"><div class="cp-line"></div></div>
+                                    <span class="cp-pill">cites &darr;</span>
+                                </div>
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
 
                 </div>
 
             {% endif %}
 
         </section>
+    </div>
   </body>
 </html>

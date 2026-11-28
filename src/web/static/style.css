@@ -118,3 +118,375 @@ header p {
         width: 100%;
     }
 }
+
+/* ===================== Citation Path Finder ===================== */
+
+.cp-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #dde3ef;
+}
+
+.cp-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.cp-header h2 {
+    color: #233c70;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.cp-header p {
+    color: #68758a;
+    max-width: 640px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+/* ---- form ---- */
+
+.cp-form {
+    background: white;
+    border: 1px solid #e2e7f0;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    padding: 24px;
+}
+
+.cp-fields {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: end;
+}
+
+.cp-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #233c70;
+}
+
+.cp-field input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #d4dbea;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.cp-field input:focus {
+    border-color: #4169b2;
+}
+
+.cp-swap {
+    padding: 15px 18px;
+    background: #eef2fa;
+    color: #315da8;
+    border: 1px solid #d4dbea;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.cp-swap:hover {
+    background: #dfe7f6;
+}
+
+.cp-hint {
+    margin-top: 14px;
+    color: #68758a;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cp-submit {
+    margin-top: 18px;
+    padding: 15px 25px;
+    background: #315da8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.cp-submit:hover {
+    background: #24477f;
+}
+
+/* ---- messages ---- */
+
+.cp-alert {
+    margin-top: 22px;
+    padding: 16px 20px;
+    background: #fff6ef;
+    border: 1px solid #f1d5bf;
+    border-left: 5px solid #e08a4b;
+    border-radius: 10px;
+    color: #7a4a22;
+    line-height: 1.6;
+}
+
+.cp-alert.cp-info {
+    background: #eef2fa;
+    border-color: #d4dbea;
+    border-left-color: #315da8;
+    color: #35507f;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+/* ---- result summary ---- */
+
+.cp-result {
+    margin-top: 30px;
+}
+
+.cp-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.cp-stat {
+    background: white;
+    border: 1px solid #e2e7f0;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    padding: 18px;
+    text-align: center;
+}
+
+.cp-stat strong {
+    display: block;
+    font-size: 30px;
+    color: #315da8;
+    margin-bottom: 4px;
+}
+
+.cp-stat span {
+    font-size: 13px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #68758a;
+}
+
+.cp-explain {
+    background: #eef2fa;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    color: #4a5870;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* ---- the path as a chain of steps ---- */
+
+.cp-step,
+.cp-link {
+    display: flex;
+    gap: 18px;
+}
+
+.cp-marker {
+    width: 42px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* line that runs from a numbered dot down to the connector below it */
+.cp-step .cp-marker::after {
+    content: "";
+    flex: 1;
+    width: 3px;
+    background: #c5d2ec;
+}
+
+.cp-chain > .cp-step:last-child .cp-marker::after {
+    display: none;
+}
+
+.cp-line {
+    flex: 1;
+    width: 3px;
+    background: #c5d2ec;
+}
+
+.cp-dot {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #315da8;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 5px #e4ebf8;
+}
+
+.cp-chain > .cp-step:last-child .cp-dot {
+    background: #2e8b6a;
+    box-shadow: 0 0 0 5px #dff1e9;
+}
+
+.cp-link {
+    min-height: 54px;
+}
+
+.cp-pill {
+    align-self: center;
+    padding: 4px 14px;
+    background: #eef2fa;
+    color: #315da8;
+    border: 1px solid #d4dbea;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.cp-card {
+    flex: 1;
+    min-width: 0;
+    background: white;
+    border: 1px solid #e2e7f0;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    padding: 20px 22px;
+}
+
+.cp-card.is-source {
+    border-left: 5px solid #315da8;
+}
+
+.cp-card.is-destination {
+    border-left: 5px solid #2e8b6a;
+}
+
+.cp-card h3 {
+    color: #315da8;
+    font-size: 18px;
+    line-height: 1.4;
+    margin: 6px 0 10px;
+}
+
+.cp-meta {
+    color: #657187;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-top: 4px;
+}
+
+.cp-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    margin-right: 6px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.cp-tag-source {
+    background: #e4ebf8;
+    color: #24477f;
+}
+
+.cp-tag-destination {
+    background: #e0f3ea;
+    color: #1f6b4d;
+}
+
+.cp-doi {
+    color: #315da8;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.cp-doi:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+    .cp-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .cp-swap {
+        justify-self: start;
+    }
+
+    .cp-submit {
+        width: 100%;
+    }
+
+    .cp-summary {
+        gap: 8px;
+    }
+
+    .cp-stat {
+        padding: 12px 6px;
+    }
+
+    .cp-stat strong {
+        font-size: 24px;
+    }
+
+    .cp-stat span {
+        font-size: 11px;
+    }
+
+    .cp-step,
+    .cp-link {
+        gap: 12px;
+    }
+
+    .cp-marker {
+        width: 34px;
+    }
+
+    .cp-dot {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    .cp-card {
+        padding: 16px;
+    }
+}
+
+/* ---- "View paper" link on search results ---- */
+
+.view-paper {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 8px 16px;
+    background: #eef2fa;
+    color: #315da8;
+    border: 1px solid #d4dbea;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.view-paper:hover {
+    background: #315da8;
+    color: white;
+    border-color: #315da8;
+}

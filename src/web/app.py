@@ -207,7 +207,7 @@ def citation_path():
     destination_id = get_selected_paper_id(selected_destination)
 
     if not source_id or not destination_id:
-        citation_error = "Please select valid source and destination papers."
+        citation_error = ("Please pick both papers from the suggestion list. Type a few words of the title, then click one of the entries (each ends with the paper ID).")
 
     else:
         try:
@@ -218,7 +218,9 @@ def citation_path():
 
             if path_result is None:
                 citation_error = (
-                    "No directed citation path exists between these papers."
+                    "No citation route leads from the source to the destination. "
+                    "Citations only point one way, from a paper to the earlier papers it cites, "
+                    "so try swapping the two papers."
                 )
 
         except FileNotFoundError:
